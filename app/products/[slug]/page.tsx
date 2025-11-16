@@ -23,7 +23,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const reviews = await getProductReviews(typedProduct.id)
   
   const averageRating = reviews.length > 0
-    ? reviews.reduce((acc, review) => {
+    ? reviews.reduce((acc: number, review: Review) => {
         const rating = parseInt((review as Review).metadata.rating.key)
         return acc + rating
       }, 0) / reviews.length
