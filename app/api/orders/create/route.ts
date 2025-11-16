@@ -28,6 +28,10 @@ export async function POST(request: NextRequest) {
     const shippingAddress = JSON.parse(session.metadata?.shipping_address || '{}')
     const orderItems = JSON.parse(session.metadata?.order_items || '[]')
 
+    // Changed: Format date as YYYY-MM-DD for Cosmic CMS date field
+    const today = new Date()
+    const orderDate = today.toISOString().split('T')[0] // Converts to YYYY-MM-DD format
+
     // Create order in Cosmic with proper field structure
     const orderData = {
       order_number: orderNumber,
@@ -40,7 +44,6 @@ export async function POST(request: NextRequest) {
       shipping_cost: parseFloat(session.metadata?.shipping || '0'),
       tax: parseFloat(session.metadata?.tax || '0'),
       total: parseFloat(session.metadata?.total || '0'),
-      // Changed: Match Cosmic CMS select-dropdown structure with key/value objects
       order_status: {
         key: 'processing',
         value: 'Processing'
@@ -51,7 +54,7 @@ export async function POST(request: NextRequest) {
       },
       stripe_payment_intent_id: session.payment_intent as string,
       stripe_session_id: session_id,
-      order_date: new Date().toISOString(),
+      order_date: orderDate, // Changed: Now uses YYYY-MM-DD format
     }
 
     await createOrder(orderData)
