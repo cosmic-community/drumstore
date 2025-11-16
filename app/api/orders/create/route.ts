@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const shippingAddress = JSON.parse(session.metadata?.shipping_address || '{}')
     const orderItems = JSON.parse(session.metadata?.order_items || '[]')
 
-    // Create order in Cosmic
+    // Create order in Cosmic with proper field structure
     const orderData = {
       order_number: orderNumber,
       customer_name: session.metadata?.customer_name || '',
@@ -40,8 +40,15 @@ export async function POST(request: NextRequest) {
       shipping_cost: parseFloat(session.metadata?.shipping || '0'),
       tax: parseFloat(session.metadata?.tax || '0'),
       total: parseFloat(session.metadata?.total || '0'),
-      order_status: 'Processing',
-      payment_status: 'Paid',
+      // Changed: Match Cosmic CMS select-dropdown structure with key/value objects
+      order_status: {
+        key: 'processing',
+        value: 'Processing'
+      },
+      payment_status: {
+        key: 'paid',
+        value: 'Paid'
+      },
       stripe_payment_intent_id: session.payment_intent as string,
       stripe_session_id: session_id,
       order_date: new Date().toISOString(),

@@ -161,15 +161,26 @@ export async function getAllReviews() {
 // Create order
 export async function createOrder(orderData: any) {
   try {
+    // Changed: Enhanced error logging for debugging
+    console.log('Creating order with data:', JSON.stringify(orderData, null, 2))
+    
     const response = await cosmic.objects.insertOne({
       title: `Order ${orderData.order_number}`,
       type: 'orders',
       metadata: orderData
     })
     
+    console.log('Order created successfully:', response.object.id)
     return response.object;
-  } catch (error) {
-    throw new Error('Failed to create order');
+  } catch (error: any) {
+    // Changed: Enhanced error logging with more details
+    console.error('Failed to create order in Cosmic:', error)
+    console.error('Error details:', {
+      message: error.message,
+      status: error.status,
+      response: error.response?.data
+    })
+    throw new Error(`Failed to create order: ${error.message}`)
   }
 }
 
@@ -213,14 +224,21 @@ export async function getOrdersByEmail(email: string) {
 // Update order status
 export async function updateOrderStatus(orderId: string, status: string, paymentStatus?: string) {
   try {
+    // Changed: Update to use proper select-dropdown structure
     const updateData: any = {
       metadata: {
-        order_status: status
+        order_status: {
+          key: status.toLowerCase().replace(' ', '-'),
+          value: status
+        }
       }
     }
     
     if (paymentStatus) {
-      updateData.metadata.payment_status = paymentStatus
+      updateData.metadata.payment_status = {
+        key: paymentStatus.toLowerCase(),
+        value: paymentStatus
+      }
     }
     
     const response = await cosmic.objects.updateOne(orderId, updateData)
