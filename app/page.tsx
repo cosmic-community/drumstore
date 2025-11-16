@@ -17,8 +17,19 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary-light to-primary-dark py-20 md:py-32">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gradient-to-br from-primary via-primary-light to-primary-dark py-20 md:py-32 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1571327073757-71d13c24de30?w=2000&auto=format,compress&fit=crop"
+            alt="Drum kit background"
+            className="w-full h-full object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary-light/85 to-primary-dark/90"></div>
+        </div>
+        
+        {/* Content */}
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               Find Your Perfect
