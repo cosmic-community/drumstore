@@ -64,6 +64,13 @@ export interface Review extends CosmicObject {
   };
 }
 
+// Contact form interface
+export interface ContactFormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
 // Category type
 export type ProductCategory = 'drum-kits' | 'cymbals' | 'hardware' | 'sticks-mallets' | 'accessories';
 

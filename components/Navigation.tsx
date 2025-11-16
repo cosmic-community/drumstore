@@ -23,6 +23,12 @@ export default function Navigation() {
             >
               Collections
             </Link>
+            <Link 
+              href="/contact" 
+              className="text-neutral-300 hover:text-white transition-colors"
+            >
+              Contact
+            </Link>
           </div>
         </div>
       </div>
