@@ -64,11 +64,105 @@ export interface Review extends CosmicObject {
   };
 }
 
+// Order interface
+export interface Order extends CosmicObject {
+  type: 'orders';
+  metadata: {
+    order_number: string;
+    customer_name: string;
+    customer_email: string;
+    customer_phone?: string;
+    shipping_address: {
+      line1: string;
+      line2?: string;
+      city: string;
+      state: string;
+      postal_code: string;
+      country: string;
+    };
+    billing_address?: {
+      line1: string;
+      line2?: string;
+      city: string;
+      state: string;
+      postal_code: string;
+      country: string;
+    };
+    order_items: Array<{
+      product_id: string;
+      product_name: string;
+      product_image?: string;
+      quantity: number;
+      price: number;
+    }>;
+    subtotal: number;
+    shipping_cost: number;
+    tax: number;
+    total: number;
+    order_status: {
+      key: string;
+      value: string;
+    };
+    payment_status: {
+      key: string;
+      value: string;
+    };
+    stripe_payment_intent_id?: string;
+    stripe_session_id?: string;
+    order_date: string;
+    notes?: string;
+  };
+}
+
+// Cart item interface
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+// Cart state interface
+export interface CartState {
+  items: CartItem[];
+  addItem: (product: Product, quantity?: number) => void;
+  removeItem: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  clearCart: () => void;
+  getCartTotal: () => number;
+  getCartCount: () => number;
+}
+
+// Checkout session data
+export interface CheckoutSessionData {
+  items: Array<{
+    product_id: string;
+    product_name: string;
+    product_image?: string;
+    quantity: number;
+    price: number;
+  }>;
+  customer_email: string;
+  customer_name: string;
+  shipping_address: {
+    line1: string;
+    line2?: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    country: string;
+  };
+}
+
 // Category type
 export type ProductCategory = 'drum-kits' | 'cymbals' | 'hardware' | 'sticks-mallets' | 'accessories';
 
 // Rating type
 export type Rating = '1' | '2' | '3' | '4' | '5';
+
+// Order status type
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
+// Payment status type
+export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 // API response types
 export interface CosmicResponse<T> {
@@ -87,4 +181,8 @@ export function isCollection(obj: CosmicObject): obj is Collection {
 
 export function isReview(obj: CosmicObject): obj is Review {
   return obj.type === 'reviews';
+}
+
+export function isOrder(obj: CosmicObject): obj is Order {
+  return obj.type === 'orders';
 }

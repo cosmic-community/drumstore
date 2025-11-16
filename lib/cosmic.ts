@@ -157,3 +157,76 @@ export async function getAllReviews() {
     throw new Error('Failed to fetch reviews');
   }
 }
+
+// Create order
+export async function createOrder(orderData: any) {
+  try {
+    const response = await cosmic.objects.insertOne({
+      title: `Order ${orderData.order_number}`,
+      type: 'orders',
+      metadata: orderData
+    })
+    
+    return response.object;
+  } catch (error) {
+    throw new Error('Failed to create order');
+  }
+}
+
+// Get order by ID
+export async function getOrder(orderId: string) {
+  try {
+    const response = await cosmic.objects
+      .findOne({
+        type: 'orders',
+        id: orderId
+      })
+    
+    return response.object;
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return null;
+    }
+    throw new Error('Failed to fetch order');
+  }
+}
+
+// Get orders by email
+export async function getOrdersByEmail(email: string) {
+  try {
+    const response = await cosmic.objects
+      .find({ 
+        type: 'orders',
+        'metadata.customer_email': email
+      })
+      .props(['id', 'title', 'slug', 'metadata'])
+    
+    return response.objects;
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return [];
+    }
+    throw new Error('Failed to fetch orders');
+  }
+}
+
+// Update order status
+export async function updateOrderStatus(orderId: string, status: string, paymentStatus?: string) {
+  try {
+    const updateData: any = {
+      metadata: {
+        order_status: status
+      }
+    }
+    
+    if (paymentStatus) {
+      updateData.metadata.payment_status = paymentStatus
+    }
+    
+    const response = await cosmic.objects.updateOne(orderId, updateData)
+    
+    return response.object;
+  } catch (error) {
+    throw new Error('Failed to update order status');
+  }
+}
