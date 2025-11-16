@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getProduct, getProductReviews } from '@/lib/cosmic'
 import { Product, Review } from '@/types'
 import ReviewCard from '@/components/ReviewCard'
+import AddToCartButton from '@/components/AddToCartButton'
 import Link from 'next/link'
 
 export const revalidate = 60
@@ -146,9 +147,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
               )}
             </div>
 
+            {/* Add to Cart Button */}
+            <AddToCartButton product={typedProduct} />
+
             {typedProduct.metadata.description && (
               <div 
-                className="prose prose-invert max-w-none mb-8"
+                className="prose prose-invert max-w-none mb-8 mt-8"
                 dangerouslySetInnerHTML={{ __html: typedProduct.metadata.description }}
               />
             )}
