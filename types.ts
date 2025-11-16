@@ -114,6 +114,13 @@ export interface Order extends CosmicObject {
   };
 }
 
+// Contact form interface
+export interface ContactFormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
 // Cart item interface
 export interface CartItem {
   product: Product;
